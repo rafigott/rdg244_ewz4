@@ -56,7 +56,7 @@
             <hr id="hl-design">
             <div class="block hl-design">
                 <p>Western music has two main types of keys: major and minor. In its most common form, pieces in a major key are typically brighter in sound. People tend to feel more excitement and happiness when these pieces are played. With pieces in minor keys, people tend to feel more calm or melancholic. The goal of this project was to reflect these emotions using colors on the VGA screen. People tend to feel happiness with green, sadness with blue, and anger with red. Therefore, the goal was to match the emotions of the sound with the color. There were two main parts of this design: the music analysis, which differentiated the keys from each other to find the mood (emotion) of the music, and the animation, which displayed the colors onto the VGA screen using a boid algorithm imitating starling murmurations. Figure 4 shows an HSV 360 degree color wheel. In our program, we use the degree value (starting with 0 degrees pointing straight up in the red section and increasing counter-clockwise) to represent colors. When the program averages or changes colors, it is using the degree value on this color wheel. This wide range of colors is made possible using Bruce Land’s 8-bit color VGA driver, which allows for more color values at the expense of screen resolution.</p>
-                <img src="pics/fuzzy.png" alt="figure 4">
+                <img src="pics/fuzzy.png" alt="figure 3">
                 <h4>Figure 4: Color Wheel from 8-bit coloring.</h4>
                 
                 <h3>Music Analysis</h3>
@@ -65,11 +65,11 @@
                 <p>Every iteration the FFT runs, the three frequencies with the highest amplitudes are identified. An amplitude threshold is then compared to the highest detected amplitude to determine if a new sound was played. If there was a new sound played, the differences in amplitude are then calculated for each of the three amplitudes to see if one, two, or three frequencies (up to a triad) were loud enough to be considered played frequencies, or if they were merely harmonics or outside noise. The algorithm then calculates the interval of the most recent highest frequency with the previous sound’s highest frequency. If two frequencies are played, then the interval between the lowest frequency and highest frequency is additionally calculated. Similarly, for three different frequences were played in the new sound, the intervals between the lowest frequency and the middle frequency and the middle frequency and the highest frequency are additionally calculated.</p>
                 <p>The intervals are calculated using a logarithmic ratio of frequencies known as cents. This equation is shown below:</p>
     
-                <img src="pics/assembled.jpg" alt="figure 5">
+                <img src="pics/assembled.jpg" alt="figure 4">
                 <h4>Figure 5: Cents equation.</h4>
 
                 <p>The difference between each interval is 100, allowing the program to easily calculate the intervals between the notes. Using C as an example, below is the interval and its cents value:</p>
-                <img src="pics/assembled.jpg" alt="figure 6">
+                <img src="pics/assembled.jpg" alt="figure 5">
                 <h4>Figure 6: Cents table.</h4>
 
                 <p>Once the cents value is found, the last step is to match the interval with a color. Though intervals are not individually trapped to an emotion, for the purpose of this project, intervals are broken up into happy (green), sad (blue), and angry (red). The idea when splitting up the intervals is to have a generally balanced color gradient, allowing for a possibility for a large range of colors to appear on the screen. With this in mind, green was set to denote unison, major third, perfect fourth, and perfect fifth intervals. Blue would denote major second, minor third, minor sixth, major sixth, and octave intervals. Finally, red would denote minor second, tritone, minor seventh, and major seventh intervals.</p>
@@ -77,11 +77,11 @@
 
                 <h3>Animation</h3>
                 <p>Since our project required the arm to move around, we needed to attach the robot base to a heavier base to keep it stable during implementation; therefore, we screwed the base to the edge of a rectangular piece of wood, which also provided an arena where we could place the fruits and buckets that the fruits will go into when sorted. For fruit detection, we used a Raspberry Pi Camera module that needed to be placed at an overhead position to capture the color and position of the fruits in the testing space. For that, we used a vertical wooden structure that was placed some distance in front of the arm position and attached a horizontal overhang that we used to hold the camera below and the Raspberry Pi, battery pack (when needed), and breadboard with circuit connections on top.</p>
-                <img src="pics/env_final.jpeg" alt="figure 7">
+                <img src="pics/env_final.jpeg" alt="figure 6">
                 <h4>Figure 7: Early boids implementation.</h4>
 
                 <p>To complete the animation, the screen is split into square tiles, as shown in the Figure blah. After the Boids algorithm updates the position of a boid, its position gets mapped to the tile on the screen that contains it. When this happens, the boid’s color values gets added to the tile’s color accumulator value, and the tile’s boid counter increments. After all the boids have their effects on the tiles updated, each tile will calculate its color. Tiles containing no boids will have their color set to the overall mood color. Otherwise, the tile will have the average color of all of its contained boids (or the color accumulator divided by the boid counter). Predators do not directly affect tile color, but instead affect the boids which do affect tile color.</p>
-                <img src="pics/cam_attach.jpeg" alt="figure 8">
+                <img src="pics/cam_attach.jpeg" alt="figure 7">
                 <h4>Figure 8: Tiled animation.</h4>
             </div>
 
@@ -91,7 +91,7 @@
         
                 <p>The program’s design involved two main sections: the animation and the music analysis. To avoid timing issues between sampling the ADC and animating to the VGA display, the animation thread was done on core 0 and the FFT analysis thread was done on core 1. Core 1 also had a serial thread that provided a user interface on the serial monitor and listen for user commands to change parameters. This was used to tune parameters to adjust our animation until we were satisfied. All threads used the Protothreads architecture provided by the course. Figure illustrates the breakdown of the high level steps into program threads.</p>
                 
-                <img src="pics/fuzzy.png" alt="figure 9">
+                <img src="pics/fuzzy.png" alt="figure 8">
                 <h4>Figure 9: Program threads.</h4>
                 
                 <h3>Hardware Design</h3>
@@ -113,16 +113,16 @@
                     2 100 Ohm Resistor<br>
                 </p>
 
-                <img src="pics/fuzzy.png" alt="figure 10">
+                <img src="pics/fuzzy.png" alt="figure 9">
                 <h4>Figure 10: Wiring diagram.</h4>
 
                 <p>The microcontroller used in this project is the Raspberry Pi Pico. There are 4 main connections to the Pico: a UART cable for a serial monitor on the computer, a button to reset the code and the device when needed, a 3.5 mm audio socket to connect the Pico to the microphone, and connections to the VGA display needed for use of 8-bit color. This project used a Shure SM58 microphone and a Focusrite Scarlett 2i2. The Scarlett 2i2 was powered by a computer with the necessary driver for the audio interface. The Shure SM58 was connected to the Scarlett 2i2 using an XLR cable. The Scarlett 2i2 was then connected to the 3.5 mm audio socket using an AUX cable. Instructions for the audio interface can be found through Focusrite’s website.</p>
 
-                <img src="pics/assembled.jpg" alt="figure 11">
+                <img src="pics/assembled.jpg" alt="figure 10">
                 <h4>Figure 11: The Shure SM58 is shown to the left, and the Focusrite Scarlett 2i2 is shown to the right in red. They are connected using an XLR cable.</h4>
 
-                <img src="pics/assembled.jpg" alt="figure 12-1">
-                <img src="pics/assembled.jpg" alt="figure 12-2">
+                <img src="pics/assembled.jpg" alt="figure 11-1">
+                <img src="pics/assembled.jpg" alt="figure 11-2">
                 <h4>Figure 12: Pictrues of our hardware setup.</h4>
             </div>
 
@@ -130,8 +130,8 @@
             <div class="block results">
                 <h2>Results</h2>
                 <p>In this project, we were able to create a live music visualizer that has some (in our opinion) very cool animations.</p>
-                <img src="pics/assembled.jpg" alt="figure 13-1">
-                <img src="pics/assembled.jpg" alt="figure 13-2">
+                <img src="pics/assembled.jpg" alt="figure 12-1">
+                <img src="pics/assembled.jpg" alt="figure 12-2">
                 <h4>Figure 13: Various demo videos.</h4>
 
                 <p>We found slow piano music worked the best, since the frequencies of the music are very distinct, and it was clear when notes are being played versus not.</p>
